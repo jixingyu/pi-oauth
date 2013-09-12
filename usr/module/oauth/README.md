@@ -24,6 +24,7 @@ Check out [manual for consumer development](https://github.com/jixingyu/oauth/tr
 
 TODO List
 =========
+- Unverified client can only access the client creater's data on resource server
 - Client logo image resize
 - Uri validation and multi-support
 - UI optimization
