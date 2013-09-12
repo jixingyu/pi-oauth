@@ -1,0 +1,63 @@
+<h2><?php _e('Client Infomation'); ?></h2>
+
+<table class="table">
+    <tr>
+        <th><?php _e('Logo');?></th>
+        <td><img src="<?php echo $client['logo']; ?>" /></td>
+    </tr>
+    <tr>
+        <th><?php _e('Client ID');?></th>
+        <td><?php echo $client['client_id']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Client Secret');?></th>
+        <td><?php echo $client['client_secret']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Client Name');?></th>
+        <td><?php echo $client['name']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Client Address');?></th>
+        <td><?php echo $client['address']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Type');?></th>
+        <td><?php echo $client['type']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Redirect Uri');?></th>
+        <td><?php echo $client['redirect_uri']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Scope');?></th>
+        <td><?php 
+            foreach($client['scope'] as $row) {
+                echo '<li>' . $row['brief'] . '</li>';
+            }
+        ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Status');?></th>
+        <td>
+            <?php if ($client['verify'] == 0) {
+                    _e('Unverified');
+                } elseif ($client['verify'] == 1) {
+                    _e('Verifing');
+                }  elseif ($client['verify'] == 2) {
+                    _e('Verified');
+                } else {
+                    echo sprintf('%s<br />%s: %s', __('Verify failed'), __('Reason'), $client['verify_result']);
+                }
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?php _e('Description');?></th>
+        <td><?php echo $client['description']; ?></td>
+    </tr>
+    <tr>
+        <th><?php _e('Create Time');?></th>
+        <td><?php echo date('Y-m-d H:i', $client['time_create']); ?></td>
+    </tr>
+</table>

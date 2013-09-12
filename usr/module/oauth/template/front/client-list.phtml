@@ -1,0 +1,84 @@
+<?php
+    $this->css($this->assetModule('script/front.css'));
+?>
+<h2><?php _e('Client List'); ?></h2>
+
+<?php if (empty($client)) {
+    echo '<p>' . __('No client infomation') . '</p>';
+} else {?>
+<!--<a class="btn btn-primary" href="<?php echo $this->url('', array('action' => 'register')); ?>"><?php _e('Register client');?></a>
+<a class="btn btn-primary" href="<?php echo $this->url('', array('action' => 'scope')); ?>"><?php _e('Apply scope');?></a>
+<br />
+<br />-->
+<div id="oauth-js">
+    <table class="table">
+        <tr>
+            <th><?php _e('Client logo'); ?></th>
+            <th><?php _e('Client name'); ?></th>
+            <th><?php _e('Client Description'); ?></th>
+            <th><?php _e('Status & Operation'); ?></th>
+            <th><?php _e('Action'); ?></th>
+        </tr>
+        <?php foreach ($client as $value) {?> 
+        <tr class="oauth-client" data-url="<?php echo $this->url('', array('action' => 'detail', 'id' => $value['id'])); ?>">
+            <td>
+                <img class="img" src="<?php echo $value['logo'];?>">
+            </td>
+            <td><?php echo $value['name'];?></td>
+            <td><?php echo $value['description'];?></td>
+            <td>
+                <?php if ($value['verify'] == 0) {
+                        echo '<a href="' . $this->url('', array('action' => 'verify', 'id' => $value['id'])) . '">' . __('Submit for verification') . '</a>';
+                    } elseif ($value['verify'] == 1) {
+                        _e('Verifing');
+                    } elseif ($value['verify'] == 2) {
+                        _e('Verified');
+                    } else {
+                        _e('Verify failed');
+                    }
+                ?>
+            </td>
+            <td>
+                <a class="oauth-js-edit" href="<?php echo $this->url('', array('action' => 'update', 'id' => $value['id'])); ?>"><?php _e('Edit'); ?></a>
+                <a class="oauth-js-delete" href="<?php echo $this->url('', array('action' => 'delete', 'id' => $value['id'])); ?>"><?php _e('Delete'); ?></a>
+            </td>
+        </tr>
+    <?php }?>
+    </table>
+</div>
+<?php }?>
+<script>
+(function($) {
+    var app = {
+        init: function() {
+            this.cacheElements();
+            this.bindEvents();
+        },
+        $: function(selector) {
+            return this.$el.find(selector);
+        },
+        cacheElements: function() {
+            this.$el = $('#oauth-js');
+            this.$delete = this.$('.oauth-js-delete');
+            this.$items = this.$('.oauth-client');
+        },
+        bindEvents: function() {
+            this.$items.bind('click', this.itemsBind);
+            this.$delete.click(this.deleteAction);
+        },
+        itemsBind: function(c) {
+            if (c.target.tagName === "A" || c.target.tagName === "INPUT" || c.target.tagName === "IMG") {
+                return;
+            }
+            window.location = $(this).attr("data-url");
+        },
+        deleteAction: function() {
+            if (!confirm('Are you sure to delete the client selected ?')) {
+                return false;
+            }
+        },
+    };
+    app.init();
+    
+})(jQuery);
+</script>

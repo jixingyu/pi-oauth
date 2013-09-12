@@ -1,0 +1,56 @@
+<h2 class="page-header"><?php _e('Apply scope'); ?></h2>
+
+<?php if (!$client) {?>
+    <p><?php _e('No verified client, you can not apply scope.');?></p>
+<?php } else {?>
+<div class="span4">
+   <h4>Select client</h4>
+    <form method="GET">    
+        <select id="scope-select">
+        <?php foreach($client as $id => $value) {?>
+            <option value="<?php echo $id ?>" <?php echo $clientid == $id ? 'selected' : '';?>>
+                <?php echo $value['name'];?>
+            </option>
+        <?php }?>
+        </select>
+    </form>
+</div>
+
+<div class="span5">
+    <h4>Scope list</h4>
+    <form action="<?php echo $scope_url; ?>" method="post">
+    <?php foreach($scope as $value) {?>
+    <label class="checkbox">
+        <input type="checkbox" name="scope[]" <?php echo in_array($value['name'], $client[$clientid]['scope']) ? 'checked disabled' : '';?> value="<?php echo $value['name']?>"><?php echo $value['brief']?>
+    </label>
+    <?php }?>
+    <input type="hidden" name="clientid" value="<?php echo $clientid;?>" />
+    <input type="submit" class="btn scope-apply" value="<?php _e('Submit')?>" />
+    </form>
+</div>
+
+<script type="text/javascript">
+(function($) {
+    $("#scope-select").change(function() {
+        var $this = $(this);
+        location.href = "<?php echo $this->url('', array('action' => 'scope')); ?>" + 'id-' + $this.val();
+    });
+//    $(".scope-apply").click(function(){
+//        var checked = $(".checkbox input:checked");
+//        var id = new Array();
+//        for(var i=0; i<checked.length;i++) {
+//            id[i] = checked[i].id;
+//        }
+//        console.log(this);
+//        $.ajax({
+//            url : "scope",
+//            type : "POST",
+//            data : {scopeid : id.join(","), client : this.id},
+//            success : function(){
+//                window.location.reload();
+//            }
+//        });
+//    });
+})(jQuery)
+</script>
+<?php }?>

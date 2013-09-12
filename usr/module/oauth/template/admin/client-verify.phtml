@@ -1,0 +1,80 @@
+<ul class="nav nav-tabs">
+    <li>
+        <a href="<?php echo $this->url('', array('action' => 'index')); ?>" title="<?php _e('Client List'); ?>">
+            <?php _e('Client List'); ?>
+        </a>
+    </li>
+    <li class="active">
+        <a href="<?php echo $this->url('', array('action' => 'verify')); ?>" title="<?php _e('Client Verify'); ?>">
+            <?php _e('Client Verify');?>
+        </a>
+    </li>    
+</ul>
+
+<h2><?php _e('Client Verify List'); ?></h2>
+<?php if (empty($list)) {?>   
+    <p><?php _e('No client application.');?></p>
+<?php } else {?>
+<table class="table">
+<tr>
+    <th><?php _e('Logo');?></th>
+    <th><?php _e('Name');?></th>
+    <th><?php _e('Brief');?></th>
+    <th><?php _e('Creater');?></th>
+    <th><?php _e('Status & Operation');?></th>
+</tr>
+<?php
+    foreach ($list as $client) { ?>
+    <tr>
+        <td>
+            <img src="<?php echo $client['logo'];?>">
+        </td>
+        <td>
+            <?php echo $client['name'];?>
+        </td>
+        <td>
+            <?php echo $client['description'];?>
+        </td>
+        <td>
+            <!-- <a href="<?php //echo $client['uid'];?>"> -->
+                <?php echo $client['username'];?>
+            <!-- </a> -->
+        </td>
+        <td>
+            <div>
+                <a href="<?php echo $this->url('', array('action' => 'verify', 'id' => $client['id'], 'flag' => '1')); ?>"><?php _e('Approve')?></a>
+                |
+                <a href="javascript:void(0)" onclick="verify(this, 0)"><?php _e('Disapprove')?></a>
+            </div>
+            <div style="position: absolute;display: none;">
+                <?php _e('Reason:'); ?> <input type="text" value="">
+                <br />
+                <button data-id="<?php echo $client['id']?>" onclick="verify(this, 1)">OK</button>
+                <button onclick="verify(this, 2)">Cancel</button>
+            </div>
+        </td>
+    </tr>
+<?php } ?>
+</table>
+<?php } ?>
+<script type="text/javascript">
+function verify(ob, action)
+{
+    var button = $(ob);
+    if (action == 0) {
+        // disapprove popup
+        var tem = button.parent();
+        tem.css("display","none");
+        tem.next().css("display","block");
+    } else if (action == 1) {
+        // disapprove
+        location.href = "<?php echo $this->url('', array('action' => 'verify', 'flag' => '2')); ?>/id/" + button.attr('data-id') + '/reason/' + button.prev().prev().val();
+    } else if (action == 2) {
+        // cancel
+        var tem = button.parent();
+        tem.css("display","none");
+        tem.prev().css("display","block");
+    }
+}
+</script>
+

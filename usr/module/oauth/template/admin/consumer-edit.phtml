@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+    <li>
+        <a href="<?php echo $this->url('', array('action' => 'index')); ?>" title="<?php _e('Add client'); ?>">
+            <?php _e('Add client'); ?>
+        </a>
+    </li>
+    <li class="active">
+        <a href="<?php echo $this->url('', array('action' => 'list')); ?>" title="<?php _e('Client list'); ?>">
+            <?php _e('Client list');?>
+        </a>
+    </li>
+</ul>
+<h2 class="page-header"><?php echo $this->escape($title); ?></h2>
+<?php include $this->templateComponent('form'); ?>

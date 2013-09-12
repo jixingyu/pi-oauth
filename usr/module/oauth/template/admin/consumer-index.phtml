@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="<?php echo $this->url('', array('action' => 'index')); ?>" title="<?php _e('Add client'); ?>">
+            <?php _e('Add client'); ?>
+        </a>
+    </li>
+    <li>
+        <a href="<?php echo $this->url('', array('action' => 'list')); ?>" title="<?php _e('Client list'); ?>">
+            <?php _e('Client list');?>
+        </a>
+    </li>
+</ul>
+<div class="pi-legend"><?php _e('Add client infomation'); ?></div>
+<?php include $this->templateComponent('form'); ?>

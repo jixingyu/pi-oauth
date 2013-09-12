@@ -1,0 +1,38 @@
+<ul class="nav nav-tabs">
+    <li>
+        <a href="<?php echo $this->url('', array('action' => 'index')); ?>" title="<?php _e('Scope Manage'); ?>">
+            <?php _e('Scope Manage'); ?>
+        </a>
+    </li>
+    <li class="active">
+        <a href="<?php echo $this->url('', array('action' => 'verify')); ?>" title="<?php _e('Scope Verify'); ?>">
+            <?php _e('Scope Verify');?>
+        </a>
+    </li>    
+</ul>
+<?php if (empty($list)) {?>   
+    <p><?php _e('No scope application.');?></p>
+<?php } else {?>
+<table class="table">
+    <tr>
+        <td><?php _e('Client name')?></td>
+        <td><?php _e('Scope application')?></td>
+        <td><?php _e('Operation')?></td>
+    </tr>
+    <?php foreach($list as $value) {?>
+    <tr>
+        <td><?php echo $value['name']?></td>
+        <td><?php 
+            foreach($value['scope'] as $name => $detail) {
+                echo '<li>' .$detail . '</li>';
+            }
+        ?></td>
+        <td>
+            <a href="<?php echo $this->url('', array('action' => 'verify', 'id' => $value['id'], 'verify' => '1')); ?>"><?php _e('Approve')?></a>
+            |
+            <a href="<?php echo $this->url('', array('action' => 'verify', 'id' => $value['id'], 'verify' => '2')); ?>"><?php _e('Ignore')?></a>
+        </td>
+    </tr>
+    <?php } ?>
+</table>
+<?php } ?>

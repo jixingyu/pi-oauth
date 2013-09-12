@@ -1,0 +1,28 @@
+<h3>User authorization</h3>
+<p><?php echo sprintf(__('Allow %s to access the following data'), "<strong>{$client['name']}</strong>"); ?>:</p>
+<ul>
+    <?php foreach ($scopes as $scope) { ?>
+    <li>
+        <input type="checkbox" name="<?php echo $scope['name']; ?>"
+            <?php
+                echo 'checked="checked"';
+                if (isset($scope['disabled']) && $scope['disabled']) {
+                    echo ' disabled="disabled"';
+                }
+            ?> />
+        <?php echo $scope['brief']; ?>
+    </li>
+    <?php } ?>
+</ul>
+<form method="post">
+
+<input type="hidden" value=1 name="auth">
+<input type="submit" value="<?php _e('Authorize'); ?>">
+<input type="button" onclick="back()" value="<?php _e('Cancel'); ?>">
+</form>
+<script type="text/javascript">
+function back()
+{
+    window.location.href = "<?php echo $backuri . '?cancel=1' ?>";
+}
+</script>

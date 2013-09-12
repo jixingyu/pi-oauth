@@ -1,0 +1,103 @@
+<?php
+    $this->bootstrap();
+    $this->css($this->assetModule('script/front.css'));
+    $this->jQuery();
+    $this->bootstrap('js/bootstrap.min.js');
+?>
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="<?php echo $this->url('', array('action' => 'index')); ?>" title="<?php _e('Client List'); ?>">
+            <?php _e('Client List'); ?>
+        </a>
+    </li>
+    <li>
+        <a href="<?php echo $this->url('', array('action' => 'verify')); ?>" title="<?php _e('Client Verify'); ?>">
+            <?php _e('Client Verify');?>
+        </a>
+    </li>    
+</ul>
+<div id="oauth-js">
+<h2><?php _e('Client List'); ?></h2>
+<?php if (empty($list)) {
+    echo '<p>' . __('No client infomation') . '</p>';
+} else {?>
+<table class="table">
+    <tr>
+        <td><?php _e('Logo');?></td>
+        <td><?php _e('Name');?></td>
+        <td><?php _e('Status');?></td>
+        <td><?php _e('Description');?></td>
+        <td><?php _e('Creater');?></td>
+        <td><?php _e('Opration');?></td>
+    </tr>
+<?php
+    foreach ($list as $client) { ?>
+    <tr class="oauth-client" data-url="<?php echo $this->url('', array('action' => 'detail', 'id' => $client['id'])); ?>">
+        <td>
+            <img src="<?php echo $client['logo'];?>">
+        </td>
+        <td>
+            <?php echo $client['name'];?>
+        </td>
+        <td>
+            <?php if ($client['verify'] == 0) {
+                    _e('New client');
+                } elseif ($client['verify'] == 1) {
+                    _e('Unverified');
+                }  elseif ($client['verify'] == 2) {
+                   _e('Approved');
+                } else {
+                   _e('Dispproved');
+                }
+            ?>
+        </td>
+        <td>
+            <?php echo $client['description'];?>
+        </td>
+        <td>
+            <!-- <a href="<?php //echo $client['uid'];?>"> -->
+                <?php echo $client['username'];?>
+            <!-- </a> -->
+        </td>
+        <td>
+            <a class="oauth-js-delete" href="<?php echo $this->url('', array('action' => 'delete', 'id' => $client['id'])); ?>"><?php _e('Delete'); ?></a>
+        </td>
+    </tr>
+<?php } ?>
+</table>
+<?php } ?>
+</div>
+<script>
+(function($) {
+    var app = {
+        init: function() {
+            this.cacheElements();
+            this.bindEvents();
+        },
+        $: function(selector) {
+            return this.$el.find(selector);
+        },
+        cacheElements: function() {
+            this.$el = $('#oauth-js');
+            this.$delete = this.$('.oauth-js-delete');
+            this.$items = this.$('.oauth-client');
+        },
+        bindEvents: function() {
+            this.$items.bind('click', this.itemsBind);
+            this.$delete.click(this.deleteAction);
+        },
+        itemsBind: function(c) {
+            if (c.target.tagName === "A" || c.target.tagName === "INPUT" || c.target.tagName === "IMG") {
+                return;
+            }
+            window.location = $(this).attr('data-url');
+        },
+        deleteAction: function() {
+            if (!confirm("<?php _e('Are you sure to delete the client selected ?'); ?>")) {
+                return false;
+            }
+        },
+    };
+    app.init();
+})(jQuery);
+</script>
