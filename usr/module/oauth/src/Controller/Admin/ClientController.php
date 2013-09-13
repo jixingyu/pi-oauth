@@ -1,9 +1,16 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 namespace Module\Oauth\Controller\Admin;
 
 use Pi;
 use Pi\Oauth\Provider\Service as Oauth;
-use Pi\Mvc\Controller\ActionController;
 use Module\Oauth\Controller\AbstractProviderController;
 
 class ClientController extends AbstractProviderController
@@ -20,7 +27,7 @@ class ClientController extends AbstractProviderController
         $userTable = Pi::model('account', 'user')->getTable();
 
         $select = $model->select()->join(
-            array('user' => $userTable), 
+            array('user' => $userTable),
             'user.id = ' . $clientTable . '.uid',
             array('username' => 'name')
         );
@@ -51,7 +58,7 @@ class ClientController extends AbstractProviderController
     }
 
     /**
-    * unable service for client 
+    * unable service for client
     * ajax action
     */
     public function deleteAction()
@@ -69,6 +76,7 @@ class ClientController extends AbstractProviderController
             array('action' => 'list'),
             $message
         );
+
         return;
     }
 
@@ -87,6 +95,7 @@ class ClientController extends AbstractProviderController
                 array('action' => 'verify'),
                 __('The client application is approved successfully.')
             );
+
             return;
         } elseif ($flag == 2) {
             // disapprove
@@ -102,12 +111,13 @@ class ClientController extends AbstractProviderController
                 array('action' => 'verify'),
                 __('The client application is disapproved.')
             );
+
             return;
         } else {
             $clientTable = $model->getTable();
             $userTable = Pi::model('user_account')->getTable();
             $select = $model->select()->join(
-                array('user' => $userTable), 
+                array('user' => $userTable),
                 'user.id = ' . $clientTable . '.uid',
                 array('username' => 'name')
             );

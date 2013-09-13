@@ -7,7 +7,6 @@
  * @license         http://pialog.org/license.txt New BSD License
  */
 
-
 namespace Module\Oauth\Controller;
 
 use Pi;
@@ -24,7 +23,7 @@ abstract class AbstractConsumerController extends ActionController
     /**
      * Execute the request
      *
-     * @param  MvcEvent $e
+     * @param  MvcEvent         $e
      * @return mixed
      * @throws \DomainException
      */
@@ -34,10 +33,12 @@ abstract class AbstractConsumerController extends ActionController
         // not consumer
         if ($config != 0) {
             $this->jumpToDenied();
+
             return;
         }
 
         $actionResponse = parent::onDispatch($e);
+
         return $actionResponse;
     }
 

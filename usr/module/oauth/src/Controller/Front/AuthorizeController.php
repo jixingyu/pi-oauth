@@ -1,4 +1,12 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 namespace Module\Oauth\Controller\Front;
 
 use Pi;
@@ -11,19 +19,19 @@ class AuthorizeController extends AbstractProviderController
     {
         /**
         * if user is not logged,redirect to login page ,which is defined by resource owner
-        * the login form  may provided by user module 
+        * the login form  may provided by user module
         * 添加强制登录选项，使用login参数，跳转到登录页面，需要去除，默认跳转不能实现，构造链接需要解决URL编码问题
         * 解决编码问题，页面跳转可使用js和程序两种方式
         *
         * 还需要判断用户已经授权的操作流程
-        */ 
+        */
 
         Oauth::boot($this->config());
         $authorize = Oauth::server('authorization');
         $request = Oauth::request();
         $params = $this->getParams();
         $params['resource_owner'] = Pi::user()->getUser()->id;
-        $request->setParameters($params); 
+        $request->setParameters($params);
 
         if ($authorize->validateRequest($request)) {
             $login_status = $this->params('login',0);
@@ -42,6 +50,7 @@ class AuthorizeController extends AbstractProviderController
                 $login_page = Pi::url('/system/login/index');//TODO
                 $this->view()->assign('login',$login_page);
                 $this->view()->setTemplate('authorize-redirect');
+
                 return;
             }
 
@@ -71,40 +80,48 @@ class AuthorizeController extends AbstractProviderController
                         }
                     }
 
+                    if (strpos($params['redirect_uri'], '?')) {
+                        $backUri = $params['redirect_uri'] . '&cancel=1';
+                    } else {
+                        $backUri = $params['redirect_uri'] . '?cancel=1';
+                    }
+
                     $this->view()->assign('scopes', $scopes);
                     $this->view()->assign('client', $client);
-                    $this->view()->assign('backuri', $params['redirect_uri']);
+                    $this->view()->assign('backuri', $backUri);
                     $this->view()->setTemplate('authorize-auth');
-                    return;  
-                }                
+
+                    return;
+                }
             } else {
                 $authorize->process($request);
-            }            
+            }
         }
-        $result = $authorize->getResult(); 
+        $result = $authorize->getResult();
         $this->response->setStatusCode($result->getStatusCode());
         $this->response->setHeaders($result->getHeaders());
         $this->response->setContent($result->setContent()->getContent());
+
         return $this->response;
     }
 
     /**
-    * redirect to login page ,the address of log page is provided by resource owner 
+    * redirect to login page ,the address of log page is provided by resource owner
     * 原计划使用函数进行跳转，由于URL转码问题，使用JavaScript进行
     */
     protected function loginPage()
     {
-        $loacation = Pi::url('') . $this->request->getServer('REDIRECT_URL');        
+        $loacation = Pi::url('') . $this->request->getServer('REDIRECT_URL');
         $resource_login = 'http://pi-oauth.com/system/login/index/';
         $this->redirect()->toUrl($resource_login);
     }
 
     /**
-    * get paramesters of request  
+    * get paramesters of request
     *
     * @return array
     */
-    protected function getParams() 
+    protected function getParams()
     {
         $clientid = $this->params('client_id');
         $response_type = $this->params('response_type');
@@ -116,7 +133,7 @@ class AuthorizeController extends AbstractProviderController
         }
 
         return array(
-            'client_id'     => $clientid, 
+            'client_id'     => $clientid,
             'response_type' => $response_type,
             'redirect_uri'  => urldecode(urldecode($redirect_uri)),
             'state'         => $state,

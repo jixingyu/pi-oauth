@@ -1,9 +1,16 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 namespace Module\Oauth\Controller\Admin;
 
 use Pi;
 use Module\Oauth\Form\ScopeAddForm;
-use Module\Oauth\Form\ScopeAddFilter;
 use Module\Oauth\Controller\AbstractProviderController;
 
 class ScopeController extends AbstractProviderController
@@ -11,7 +18,7 @@ class ScopeController extends AbstractProviderController
     public function indexAction()
     {
         $this->view()->assign('title', __('Scope Page'));
-        $model = $this->getModel('scope');        
+        $model = $this->getModel('scope');
         $rowset = $model->select(array());
         if (!$rowset) {
             return;
@@ -83,6 +90,7 @@ class ScopeController extends AbstractProviderController
                 array('action' => 'verify'),
                 __('Scope verify successfully.')
             );
+
             return;
         } elseif ($verify == 2) {
             // ignore
@@ -95,6 +103,7 @@ class ScopeController extends AbstractProviderController
                 array('action' => 'verify'),
                 __('Ignore the application.')
             );
+
             return;
         } else {
             $rowset = $model->select(array('scope_apply' => 1));
@@ -103,7 +112,7 @@ class ScopeController extends AbstractProviderController
             }
             $client = $rowset->toArray();
             $temp = Pi::model('scope', 'oauth')->select(array())->toArray();
-            foreach($temp as $value) {
+            foreach ($temp as $value) {
                 $scope[$value['name']] = $value['brief'];
             }
             foreach ($client as $value) {
@@ -111,7 +120,7 @@ class ScopeController extends AbstractProviderController
                 $data['name'] = $value['name'];
                 $temp_scope_name = explode(' ', $value['scope_detail']);
                 $data['scope'] = array();
-                foreach($temp_scope_name as $name) {
+                foreach ($temp_scope_name as $name) {
                     $data['scope'][$name] = $scope[$name];
                 }
                 $data_list[] = $data;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 $config = array();
 
 // config category
@@ -22,7 +30,7 @@ $config['category'] = array(
     array(
         'name'      => 'grant_type',
         'title'     => __('Grant type(Provider)'),
-    ),  
+    ),
     array(
         'name'      => 'storage',
         'title'     => __('Storage model(Provider)'),
@@ -215,7 +223,7 @@ return $config;
 //                         'config'    => array(
 //                             'table_prefix'  => 'oauth',
 //                         ),
-//                     ),            
+//                     ),
 //                 ),
 //                 'authorization_code'    => array(
 //                     'expires_in'    => 300,

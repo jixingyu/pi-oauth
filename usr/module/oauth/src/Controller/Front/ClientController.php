@@ -1,4 +1,12 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 namespace Module\Oauth\Controller\Front;
 
 use Zend\Validator\Explode;
@@ -28,17 +36,19 @@ class ClientController extends AbstractProviderController
             'controller' => 'login',
             'action'     => 'index'
         ));
+
         return $this->loginUrl;
     }
 
     /**
-    * register action , should login before register 
+    * register action , should login before register
     */
     public function registerAction()
     {
         if (!Pi::user()->hasIdentity()) {
             $this->view()->assign('login',$this->getLoginUrl());
             $this->view()->setTemplate('authorize-redirect');
+
             return;
         }
 
@@ -51,15 +61,16 @@ class ClientController extends AbstractProviderController
             $post = $this->request->getPost();
             $form->setData($post);
             $form->setInputFilter(new ClientRegisterFilter);
-            if(!$form->isValid()) {
+            if (!$form->isValid()) {
                 $this->view()->assign('form', $form);
+
                 return;
             }
             $uid = Pi::user()->getUser()->id;
             $data = $form->getData();
             if (!$data['logo']) {//TODO
                 $data['logo'] = "/asset/oauth/logo.png";
-            }        
+            }
             $data = array(
                 'name'          => $data['name'],
                 'redirect_uri'  => urldecode(urldecode($data['redirect_uri'])),
@@ -77,6 +88,7 @@ class ClientController extends AbstractProviderController
             } else {
                 $result = Oauth::storage('client')->addClient($data);
                 $this->redirect()->toUrl('/oauth/client/list');
+
                 return;
             }
         }
@@ -84,7 +96,7 @@ class ClientController extends AbstractProviderController
             'form'      => $form,
             'message'   => $message,
         ));
-        $this->view()->setTemplate('client-register');        
+        $this->view()->setTemplate('client-register');
     }
 
     /**
@@ -104,7 +116,7 @@ class ClientController extends AbstractProviderController
             $result = Oauth::storage('client')->get($id);
             $this->view()->assign('client', $result);
             $this->view()->setTemplate('client-info');
-        }      
+        }
     }
 
     public function detailAction()
@@ -142,6 +154,7 @@ class ClientController extends AbstractProviderController
             $form->setInputFilter(new ClientEditFilter);
             if (!$form->isValid()) {
                 $this->view()->assign('form', $form);
+
                 return;
             }
             $data = $form->getData();
@@ -149,6 +162,7 @@ class ClientController extends AbstractProviderController
             // not self
             if ($data['uid'] != $userid) {
                 $this->jumpToDenied();
+
                 return;
             }
             unset(
@@ -163,6 +177,7 @@ class ClientController extends AbstractProviderController
             if ($result) {
                 $message = __('Client data saved successfully, please re-verify the client');
                 $this->jump(array('action' => 'list'), $message);
+
                 return;
             } else {
                 $message = __('Client data not saved.');
@@ -174,6 +189,7 @@ class ClientController extends AbstractProviderController
             // not self
             if ($result['uid'] != $userid) {
                 $this->jumpToDenied();
+
                 return;
             }
             $form->setData($result);
@@ -201,6 +217,7 @@ class ClientController extends AbstractProviderController
         // not self
         if ($result['uid'] != $userid) {
             $this->jumpToDenied();
+
             return;
         }
         Oauth::storage('client')->delete($id);
@@ -248,6 +265,7 @@ class ClientController extends AbstractProviderController
                         $message
                     );
                 }
+
                 return;
             }
             Oauth::boot($this->config());
@@ -264,6 +282,7 @@ class ClientController extends AbstractProviderController
                 $message = __('Failed to apply scope');
             }
             $this->jump(array('action' => 'list'), $message);
+
             return;
         }
         if (empty($clientid)) {
@@ -282,7 +301,7 @@ class ClientController extends AbstractProviderController
                               ->where(array('uid' => $userid, 'verify' => 2));
         $client = $clientModel->selectWith($select)->toArray();
         if ($client) {
-            foreach($client as $value) {
+            foreach ($client as $value) {
                 $client_data[$value['id']] = array(
                     'name' => $value['name'],
                     'scope' => explode(' ', $value['scope']),
@@ -304,7 +323,7 @@ class ClientController extends AbstractProviderController
             $this->view()->assign('scope_url', $scopeUrl);
             $this->view()->assign('clientid', $clientid);
             $this->view()->assign('client', $client_data);
-        }              
+        }
         $this->view()->setTemplate('client-scope');
     }
 }

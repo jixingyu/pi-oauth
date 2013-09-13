@@ -1,4 +1,12 @@
-<?php 
+<?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 return array(
     // Module meta
     'meta'  => array(
@@ -27,7 +35,7 @@ return array(
         // Author full name, required
         'name'      => 'lele',
         // Email address, optional
-        'email'     => 'lele@eefocus.com', 
+        'email'     => 'lele@eefocus.com',
         // Website link, optional
         'website'   => 'http://www.xoopsengine.org',
         // Credits and aknowledgement, optional

@@ -1,11 +1,19 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 namespace Module\Oauth\Controller\Admin;
 
 use Pi;
-use Module\Oauth\Form\ClientInfoForm; 
-use Module\Oauth\Form\ClientInfoFilter; 
-use Module\Oauth\Form\ConsumerEditForm; 
-use Module\Oauth\Form\ConsumerEditFilter; 
+use Module\Oauth\Form\ClientInfoForm;
+use Module\Oauth\Form\ClientInfoFilter;
+use Module\Oauth\Form\ConsumerEditForm;
+use Module\Oauth\Form\ConsumerEditFilter;
 use Module\Oauth\Controller\AbstractConsumerController;
 
 class ConsumerController extends AbstractConsumerController
@@ -30,13 +38,12 @@ class ConsumerController extends AbstractConsumerController
         $form = new ClientInfoForm('ClientInfo');
         $form->setAttribute('action', $this->url('', array('action' => 'client')));
 
-
         if ($this->request->isPost()) {
             $post = $this->request->getPost();
             $form->setData($post);
             $form->setInputFilter(new ClientInfoFilter);
             if (!$form->isValid()) {
-                $this->view()->assign('form', $form);   
+                $this->view()->assign('form', $form);
                 $this->view()->setTemplate('consumer-index');
             } else {
                 $params = $form->getData();
@@ -52,9 +59,9 @@ class ConsumerController extends AbstractConsumerController
                 $row = Pi::model('consumer_client', 'oauth')->createRow($data);
                 $row->save();
                 // $this->view()->assign('form', $form);
-                $this->redirect()->toUrl('/admin/oauth/consumer/list'); 
+                $this->redirect()->toUrl('/admin/oauth/consumer/list');
             }
-        }        
+        }
     }
 
     /**
@@ -106,6 +113,7 @@ class ConsumerController extends AbstractConsumerController
                 $result = $model->update($data, array('id' => $id));
                 if ($result) {
                     $this->jump(array('action' => 'list'));
+
                     return;
                 } else {
                     $message = __('Client data not saved.');
@@ -152,11 +160,6 @@ class ConsumerController extends AbstractConsumerController
         $this->setTemplate('false');
     }
 
-    public function tokenAction()
-    {
-        $this->view()->setTemplate('client-token');
-    }
-
     /**
     * 在客户端提供取消应用授权的功能应该是不合适的，因为本oauth模块式提供给多个客户端模块使用，
     * oauth模块只是为了简化客户端访问server的开发问题，不应该提供过多的功能接口
@@ -168,10 +171,11 @@ class ConsumerController extends AbstractConsumerController
             'server' => $server,
         ));
         if ($row) {
-            $config = $row->toArray();        
+            $config = $row->toArray();
             $oauth = Pi::service('api')->oauth(array('server','getServer'),$config);
             // $token = $oauth->getToken();
             $oauth->revokeToken();
+
             return TRUE;
         } else {
             return "error";

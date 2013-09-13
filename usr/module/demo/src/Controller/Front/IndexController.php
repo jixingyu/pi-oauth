@@ -16,6 +16,21 @@ use Zend\Db\Sql\Predicate\Expression;
 
 class IndexController extends ActionController
 {
+    public function getEmailAction()
+    {
+        $token = $this->params('access_token');
+        $clientid = $this->params('client_id');
+        $result = Pi::api('oauth', 'resource')->validateToken($clientid, $token, 'test');
+        $params = $result->getParams();
+        if (!empty($params['error'])) {
+            $result->send();
+            exit;
+        } else {
+            $this->view()->assign('email', Pi::user()->getUser($params['resource_owner'])->email);
+            $this->view()->setTemplate(false);
+        }
+    }
+
     /**
      * A test page with a couple of API demos
      */

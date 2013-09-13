@@ -1,4 +1,12 @@
 <?php
+/**
+ * Pi Engine (http://pialog.org)
+ *
+ * @link            http://code.pialog.org for the Pi Engine source repository
+ * @copyright       Copyright (c) Pi Engine http://pialog.org
+ * @license         http://pialog.org/license.txt New BSD License
+ */
+
 namespace Module\Oauth\Controller\Front;
 
 use Pi;
@@ -26,6 +34,7 @@ class ConsumerController extends AbstractConsumerController
         $cancel = _get('cancel', 'int');
         if ($cancel) {
             $this->jump('', __('Cancel authorization'));
+
             return;
         }
         $code = $this->params('code','');
@@ -52,7 +61,7 @@ class ConsumerController extends AbstractConsumerController
         } else {
             $this->view()->assign('error',$token);
             $this->view()->setTemplate('callback-error');
-        }        
+        }
     }
 
 }

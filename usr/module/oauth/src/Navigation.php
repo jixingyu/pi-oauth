@@ -21,7 +21,7 @@ class Navigation
     /**
      * Admin navigation
      *
-     * @param string $module
+     * @param  string $module
      * @return array
      */
     public static function admin($module)
@@ -73,7 +73,7 @@ class Navigation
     /**
      * Front navigation
      *
-     * @param string $module
+     * @param  string $module
      * @return array
      */
     public static function front($module)
