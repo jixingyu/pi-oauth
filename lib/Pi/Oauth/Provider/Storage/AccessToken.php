@@ -42,18 +42,15 @@ class AccessToken extends AbstractStorage implements CodeInterface
 
     public function get($token)
     {
-        return $token = $this->model->get($token,'token');
+        return $token = $this->model->get($token, 'token');
     }
 
-    public function checkUserAuth($uid, $clientid)
+    public function getUserToken($uid, $clientid)
     {
         $result = $this->model->getToken(array(
             'resource_owner' => $uid,
             'client_id'      => $clientid
         ));
-        if ($result && $result['expires'] > time()) {
-            return true;
-        }
-        return false;
+        return $result;
     }
 }

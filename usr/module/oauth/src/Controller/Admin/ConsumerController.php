@@ -16,11 +16,23 @@ use Module\Oauth\Form\ConsumerEditForm;
 use Module\Oauth\Form\ConsumerEditFilter;
 use Module\Oauth\Controller\AbstractConsumerController;
 
+/**
+ * Consumer client management controller
+ *
+ * Client management for consumer admin
+ * Features: client list, addition, edition, deletion and verification
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class ConsumerController extends AbstractConsumerController
 {
+    /**
+     * Index Action
+     *
+     * @return void
+     */
     public function indexAction()
     {
-        // 提供填写信息表单，列出已有的数据 作为验证
         $form = new ClientInfoForm('ClientInfo');
         $form->setAttribute('action', $this->url('', array('action' => 'client')));
         $this->view()->assign('form', $form);
@@ -28,13 +40,12 @@ class ConsumerController extends AbstractConsumerController
     }
 
     /**
-    * 提供后台页面，为每个第三方模块保存模块在OAuth服务器上的身份信息
-    * 需要填写的内容： client_id， client_secret， module_name， server_name
-    * @return bool   失败：错误信息
-    */
+     * Add client
+     *
+     * @return void
+     */
     public function clientAction()
     {
-        // 接收表单提交的数据，保存到数据库，如果提交的记录已经存在 则 更新已有数据
         $form = new ClientInfoForm('ClientInfo');
         $form->setAttribute('action', $this->url('', array('action' => 'client')));
 
@@ -64,12 +75,14 @@ class ConsumerController extends AbstractConsumerController
         }
     }
 
+
     /**
-    * 后台查看客户端信息页面
-    */
+     * List client
+     *
+     * @return void
+     */
     public function listAction()
     {
-        //列出已有的客户端信息
         $row = Pi::model('consumer_client', 'oauth')->select(array());
         $client = array();
         if ($row) {
@@ -158,27 +171,5 @@ class ConsumerController extends AbstractConsumerController
             __('The client is deleted successfully.')
         );
         $this->setTemplate('false');
-    }
-
-    /**
-    * 在客户端提供取消应用授权的功能应该是不合适的，因为本oauth模块式提供给多个客户端模块使用，
-    * oauth模块只是为了简化客户端访问server的开发问题，不应该提供过多的功能接口
-    */
-    public function revokeAction()
-    {
-        $row = Pi::model('oauth_client', 'oauth')->select(array(
-            'name'   => $module,
-            'server' => $server,
-        ));
-        if ($row) {
-            $config = $row->toArray();
-            $oauth = Pi::service('api')->oauth(array('server','getServer'),$config);
-            // $token = $oauth->getToken();
-            $oauth->revokeToken();
-
-            return TRUE;
-        } else {
-            return "error";
-        }
     }
 }

@@ -13,13 +13,31 @@ use Pi;
 use Pi\Oauth\Provider\Service as Oauth;
 use Module\Oauth\Controller\AbstractProviderController;
 
+/**
+ * Client management controller
+ *
+ * Client management for provider admin
+ * Features: client list, addition, deletion and verification
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class ClientController extends AbstractProviderController
 {
+    /**
+     * Index action
+     *
+     * @return void
+     */
     public function indexAction()
     {
         $this->listAction();
     }
 
+    /**
+     * List all client information
+     *
+     * @return void
+     */
     public function listAction()
     {
         $model = $this->getModel('client');
@@ -40,6 +58,11 @@ class ClientController extends AbstractProviderController
         $this->view()->setTemplate('client-list');
     }
 
+    /**
+     * Display client details
+     *
+     * @return void
+     */
     public function detailAction()
     {
         $id = _get('id', 'int');
@@ -58,9 +81,10 @@ class ClientController extends AbstractProviderController
     }
 
     /**
-    * unable service for client
-    * ajax action
-    */
+     * Delete client
+     *
+     * @return void
+     */
     public function deleteAction()
     {
         $id = _get('id', int);
@@ -80,6 +104,11 @@ class ClientController extends AbstractProviderController
         return;
     }
 
+    /**
+     * Verify client
+     *
+     * @return void
+     */
     public function verifyAction()
     {
         $id     = _get('id', 'int');

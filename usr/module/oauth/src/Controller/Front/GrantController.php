@@ -13,8 +13,20 @@ use Pi;
 use Pi\Oauth\Provider\Service as Oauth;
 use Module\Oauth\Controller\AbstractProviderController;
 
+/**
+ * Grant controller
+ *
+ * Grant access token to client
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class GrantController extends AbstractProviderController
 {
+    /**
+     * Grant process
+     *
+     * @return void
+     */
     public function indexAction()
     {
         Oauth::boot($this->config());
@@ -31,8 +43,9 @@ class GrantController extends AbstractProviderController
     }
 
     /**
-    * 根据不同的授权请求 获取不同的参数
-    *  code：
+    * Get paramesters of request
+    *
+    * @return array
     */
     protected function getParams()
     {
@@ -64,7 +77,6 @@ class GrantController extends AbstractProviderController
             case 'password':
                 $params['username'] = $this->params('username', '');
                 $params['password'] = $this->params('password', '');
-                $params['resource_owner'] = Pi::user()->getUser()->id;
                 break;
 
             case 'refresh_token':

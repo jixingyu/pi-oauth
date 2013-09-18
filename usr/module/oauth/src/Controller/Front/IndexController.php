@@ -12,8 +12,18 @@ namespace Module\Oauth\Controller\Front;
 use Pi;
 use Pi\Mvc\Controller\ActionController;
 
+/**
+ * Index controller
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class IndexController extends ActionController
 {
+    /**
+     * Index action
+     *
+     * @return void
+     */
     public function indexAction()
     {
         $config = $this->config('oauth_role');

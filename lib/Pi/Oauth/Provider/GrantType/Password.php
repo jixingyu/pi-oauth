@@ -1,6 +1,7 @@
 <?php
 namespace Pi\Oauth\Provider\GrantType;
 
+use Pi;
 use Pi\Oauth\Provider\Service;
 
 class Password extends AbstractGrantType
@@ -30,12 +31,15 @@ class Password extends AbstractGrantType
         if (!Service::storage('resource_owner')->validate($username, $password)) {
             $this->setError('invalid_grant');
             return false;
+        } else {
+            $request->setParameters(array(
+                'resource_owner' => Pi::user()->getUser($username, 'identity')->id
+            ));
+            return true;
         }
-
-        return true;
     }
 
-    public function createToken()
+    public function createToken($createRreshToken = false)
     {
         // @see http://tools.ietf.org/html/rfc6749#section-4.3.3 Optional for password grant_type
         $createFreshToken = Service::server('grant')->hasGrantType('refresh_token');

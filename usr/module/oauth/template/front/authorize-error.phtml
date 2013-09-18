@@ -1,0 +1,8 @@
+<div class="alert alert-error">
+    <h2 class="page-header"><?php _e('An error occurred'); ?></h2>
+    <p>
+        <?php echo sprintf('%s: %s', __('Error'), $authorize_error['error']); ?>
+        <br />
+        <?php echo sprintf('%s: %s', __('Error description'), $authorize_error['error_description']); ?>
+    </p>
+</div>

@@ -19,34 +19,39 @@ use Module\Oauth\Form\ClientEditForm;
 use Module\Oauth\Form\ClientEditFilter;
 use Module\Oauth\Controller\AbstractProviderController;
 
+/**
+ * Client management controller
+ *
+ * Client management of oauth server in front end
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class ClientController extends AbstractProviderController
 {
-    protected $loginUrl = '';
-
+    /**
+     * Index action
+     *
+     * @return void
+     */
     public function indexAction()
     {
         $this->registerAction();
     }
 
-    public function getLoginUrl()
-    {
-        //TODO
-        $this->loginUrl = $this->url('', array(
-            'module'     => 'system',
-            'controller' => 'login',
-            'action'     => 'index'
-        ));
-
-        return $this->loginUrl;
-    }
-
     /**
-    * register action , should login before register
-    */
+     * Register client
+     *
+     * @return void
+     */
     public function registerAction()
     {
         if (!Pi::user()->hasIdentity()) {
-            $this->view()->assign('login',$this->getLoginUrl());
+            $loginUrl = $this->url('', array(
+                'module'     => 'system',
+                'controller' => 'login',
+                'action'     => 'index'
+            ));
+            $this->view()->assign('login', $loginUrl);
             $this->view()->setTemplate('authorize-redirect');
 
             return;
@@ -100,9 +105,10 @@ class ClientController extends AbstractProviderController
     }
 
     /**
-    * there is a client id ,show info of this client
-    * or show client list with brife info
-    */
+     * List client
+     *
+     * @return void
+     */
     public function listAction()
     {
         $id = $this->params('id', '');
@@ -119,6 +125,11 @@ class ClientController extends AbstractProviderController
         }
     }
 
+    /**
+     * Display client details
+     *
+     * @return void
+     */
     public function detailAction()
     {
         $id = _get('id', 'int');
@@ -136,9 +147,11 @@ class ClientController extends AbstractProviderController
         $this->view()->assign('client', $detail);
     }
 
-    /*
-    * an ajax action , update client info
-    */
+    /**
+     * Edit client
+     *
+     * @return void
+     */
     public function updateAction()
     {
         Oauth::boot($this->config());
@@ -173,6 +186,8 @@ class ClientController extends AbstractProviderController
             // set client unverified
             $data['verify'] = 0;
             $data['verify_result'] = '';
+            // reset scope
+            $data['scope'] = $this->config('unverified_scope');
             $result = Oauth::storage('client')->update($data['id'], $data);
             if ($result) {
                 $message = __('Client data saved successfully, please re-verify the client');
@@ -229,8 +244,10 @@ class ClientController extends AbstractProviderController
     }
 
     /**
-    * an ajax action , verify client info request
-    */
+     * Verify client
+     *
+     * @return void
+     */
     public function verifyAction()
     {
         $id = _get('id', 'int');
@@ -247,6 +264,11 @@ class ClientController extends AbstractProviderController
         );
     }
 
+    /**
+     * Apply scope
+     *
+     * @return void
+     */
     public function scopeAction()
     {
         $clientid = _get('id', 'int');

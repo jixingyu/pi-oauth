@@ -19,6 +19,11 @@ class Response extends HttpResponse
         return $this;
     }
 
+    public function getParams()
+    {
+        return $this->params;
+    }
+
     public function setParams(array $params)
     {
         $this->params = $params;

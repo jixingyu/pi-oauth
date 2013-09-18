@@ -152,7 +152,7 @@ class Authorization extends AbstractServer
             'scope'          => $request->getRequest('scope'),
             'state'          => $request->getRequest('state'),
             'resource_owner' => $request->getRequest('resource_owner'),
-        );      
+        );
 
         $redirectUri = $params['redirect_uri'];
         $responseType = $params['response_type'];

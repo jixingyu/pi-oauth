@@ -1,14 +1,14 @@
 front-end
 ========
-
 #### 1. Client management
 * **Register:** Web application register a client, then a client_id and client_secret will be generated. Registration needs client name, address, redirect uri, description, logo.
 * **Client list:** List the clients that registered before.
 * **Show details and edit client:** Client id and client secret can not be changed.
 * **Submit for verification:**  Need to submit for verification after register a client. If the client is not verified, functions are limited.
-* **Apply for scope:** The new registered client has the scope with base functions. The application for more scopes is provided after the client is virefied.
+* **Apply for scope:** The new registered client get the scope with base functions. The application for more scopes is provided after the client is virefied.
 
-Check out [manual for consumer development](https://github.com/jixingyu/oauth/tree/master/oauth/doc)
+#### 2. Note
+* Unverified client is used to develop and only client creater's data on resource server are accessible.
 
 back-end
 ========

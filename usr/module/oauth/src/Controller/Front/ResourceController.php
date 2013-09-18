@@ -22,7 +22,6 @@ class ResourceController extends AbstractProviderController
         return $this->response;
     }
 
-
     /**
     * get paramesters of request  
     *

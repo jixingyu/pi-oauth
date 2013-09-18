@@ -18,7 +18,7 @@ class Loader implements LoaderInterface
     {
         $class = __NAMESPACE__ . '\\' . Service::canonizeName($identifier);
         if ('resource_owner' == $identifier) {
-            $model = Pi::model('user');
+            $model = Pi::model('user_account');
         } else {
             $model = Pi::model($identifier, static::$config['table_prefix']);
         }

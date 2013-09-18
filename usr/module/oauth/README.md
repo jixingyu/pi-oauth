@@ -20,12 +20,12 @@ As consumer, oauth module provides the following api:
 - Get access token from oauth provider server
 - Generate resource url to get resource data.
 
-Check out [manual for consumer development](https://github.com/jixingyu/oauth/tree/master/oauth/doc)
+Check out [manual for consumer development](https://github.com/jixingyu/pi-oauth/tree/master/usr/module/oauth/doc)
 
 TODO List
 =========
-- Unverified client can only access the client creater's data on resource server
 - Client logo image resize
 - Uri validation and multi-support
 - UI optimization
 - Consumer api optimization
+- Client with different type get different grant types support

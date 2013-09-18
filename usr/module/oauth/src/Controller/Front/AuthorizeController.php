@@ -13,19 +13,20 @@ use Pi;
 use Pi\Oauth\Provider\Service as Oauth;
 use Module\Oauth\Controller\AbstractProviderController;
 
+/**
+ * Authorization controller
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class AuthorizeController extends AbstractProviderController
 {
+    /**
+     * Authorizaiton process
+     *
+     * @return void
+     */
     public function indexAction()
     {
-        /**
-        * if user is not logged,redirect to login page ,which is defined by resource owner
-        * the login form  may provided by user module
-        * 添加强制登录选项，使用login参数，跳转到登录页面，需要去除，默认跳转不能实现，构造链接需要解决URL编码问题
-        * 解决编码问题，页面跳转可使用js和程序两种方式
-        *
-        * 还需要判断用户已经授权的操作流程
-        */
-
         Oauth::boot($this->config());
         $authorize = Oauth::server('authorization');
         $request = Oauth::request();
@@ -34,90 +35,94 @@ class AuthorizeController extends AbstractProviderController
         $request->setParameters($params);
 
         if ($authorize->validateRequest($request)) {
-            $login_status = $this->params('login',0);
-            if (!is_numeric($login_status)) {
-                return;
-            }
-
+            // check login
+            $login_status = Pi::user()->hasIdentity();
             if (!$login_status) {
-                $login_status = !Pi::user()->hasIdentity();
-            } else {
-                // User::logout();
-            }
-
-            if ($login_status) {
-                // $this->loginPage();
                 $login_page = Pi::url('/system/login/index');//TODO
-                $this->view()->assign('login',$login_page);
+                $this->view()->assign('login', $login_page);
                 $this->view()->setTemplate('authorize-redirect');
 
                 return;
             }
-
-            if (!$request->ispost()) {
-                //check if user has authorized this client
-                $isAuth = Oauth::storage('access_token')->checkUserAuth($params['resource_owner'], $params['client_id']);
-                if ($isAuth) {
-                    $authorize->process($request);
-                } else {
-                    // client infomation
-                    $client = Oauth::storage('client')->getClient($params['client_id']);
-
-                    // scope infomation
-                    $scopeRequested = explode(' ', $params['scope']);
-                    $model = $this->getModel('scope');
-                    $select = $model->select()->where(array(
-                        'name' => $scopeRequested
-                    ));
-                    $scopes = $model->selectWith($select)->toArray();
-                    $scopeBase = array_merge(
-                        explode(' ', $this->config('base_scope')),
-                        explode(' ', $this->config('unverified_scope'))
-                    );
-                    foreach ($scopes as &$scope) {
-                        if (in_array($scope['name'], $scopeBase)) {
-                            $scope['disabled'] = true;
-                        }
-                    }
-
-                    if (strpos($params['redirect_uri'], '?')) {
-                        $backUri = $params['redirect_uri'] . '&cancel=1';
-                    } else {
-                        $backUri = $params['redirect_uri'] . '?cancel=1';
-                    }
-
-                    $this->view()->assign('scopes', $scopes);
-                    $this->view()->assign('client', $client);
-                    $this->view()->assign('backuri', $backUri);
-                    $this->view()->setTemplate('authorize-auth');
-
-                    return;
-                }
+            // Unverified client can only access the client creater's data
+            $clientData = Oauth::storage('client')->getClient($params['client_id']);
+            if ($clientData['verify'] != 2 && $clientData['uid'] != Pi::user()->getUser()->id) {
+                $authorize->setError('access_denied');
             } else {
-                $authorize->process($request);
+                if (!$request->ispost()) {
+                    //check if user has authorized this client already in scope
+                    $accessToken = Oauth::storage('access_token')->getUserToken(
+                        $params['resource_owner'],
+                        $params['client_id']
+                    );
+                    if ($accessToken && $accessToken['expires'] > time()) {
+                        $scopeNew = Oauth::scope($params['scope']);
+                        $scopeOld = Oauth::scope($accessToken['scope']);
+                        if (!$scopeNew->isSubsetOf($scopeOld)) {
+                            $isAuth = false;
+                        }
+                        $isAuth = true;
+                    } else {
+                        $isAuth = false;
+                    }
+                    if ($isAuth) {
+                        $authorize->process($request);
+                    } else {
+                        // client infomation
+                        $client = Oauth::storage('client')->getClient($params['client_id']);
+
+                        // scope infomation
+                        $scopeRequested = explode(' ', $params['scope']);
+                        $model = $this->getModel('scope');
+                        $select = $model->select()->where(array(
+                            'name' => $scopeRequested
+                        ));
+                        $scopes = $model->selectWith($select)->toArray();
+                        $scopeBase = array_merge(
+                            explode(' ', $this->config('base_scope')),
+                            explode(' ', $this->config('unverified_scope'))
+                        );
+                        foreach ($scopes as &$scope) {
+                            if (in_array($scope['name'], $scopeBase)) {
+                                $scope['disabled'] = true;
+                            }
+                        }
+
+                        if (strpos($params['redirect_uri'], '?')) {
+                            $backUri = $params['redirect_uri'] . '&cancel=1';
+                        } else {
+                            $backUri = $params['redirect_uri'] . '?cancel=1';
+                        }
+
+                        $this->view()->assign('scopes', $scopes);
+                        $this->view()->assign('client', $client);
+                        $this->view()->assign('backuri', $backUri);
+                        $this->view()->setTemplate('authorize-auth');
+
+                        return;
+                    }
+                } else {
+                    $authorize->process($request);
+                }
             }
         }
         $result = $authorize->getResult();
+        $content = $result->setContent()->getContent();
+        if ($result instanceof \Pi\Oauth\Provider\Result\Error) {
+            $content = json_decode($content, true);
+            $this->view()->assign('authorize_error', $content);
+            $this->view()->setTemplate('authorize-error');
+            return;
+        }
         $this->response->setStatusCode($result->getStatusCode());
         $this->response->setHeaders($result->getHeaders());
-        $this->response->setContent($result->setContent()->getContent());
+        $this->response->setContent($content);
 
         return $this->response;
     }
 
     /**
-    * redirect to login page ,the address of log page is provided by resource owner
-    * 原计划使用函数进行跳转，由于URL转码问题，使用JavaScript进行
-    */
-    protected function loginPage()
-    {
-        $loacation = Pi::url('') . $this->request->getServer('REDIRECT_URL');
-        $resource_login = 'http://pi-oauth.com/system/login/index/';
-        $this->redirect()->toUrl($resource_login);
-    }
-
-    /**
-    * get paramesters of request
+    * Get paramesters of request
     *
     * @return array
     */

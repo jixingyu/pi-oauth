@@ -12,19 +12,17 @@ namespace Module\Oauth\Controller\Front;
 use Pi;
 use Module\Oauth\Controller\AbstractConsumerController;
 
+/**
+ * Consumer controller
+ *
+ * @author Xingyu Ji <xingyu@eefocus.com>
+ */
 class ConsumerController extends AbstractConsumerController
 {
-    public function indexAction()
-    {
-    }
-
     /**
-    * 授权服务回调函数，使用授权码换取token
+    * Redirect uri, get access token by authorization code
     *
-    * @param code ：必须  授权码服务返回的授权码
-    * @param state：可选  请求和回调的状态字符串
-    * @param next： 可选  token获取后，浏览器的导向地址，默认跳转到当前域名地址
-    * @return 如果请求token过程出现错误，则显示错误信息页面；否则跳转到后续页面
+    * @return void
     */
     public function callbackAction()
     {
