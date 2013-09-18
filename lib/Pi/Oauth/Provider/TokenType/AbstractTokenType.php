@@ -25,6 +25,7 @@ abstract class AbstractTokenType
     public function setConfig(array $config)
     {
         $this->config = array_merge($this->config, $config);
+
         return $this;
     }
 
@@ -38,27 +39,29 @@ abstract class AbstractTokenType
     /**
      * Create error result
      *
-     * @param array $params
+     * @param  array             $params
      * @return AbstractTokenType
      */
     public function setResult(array $params = array())
     {
         $this->result = Service::result('response', $params);
+
         return $this;
     }
 
     /**
      * Create error result
      *
-     * @param string $errorCode
-     * @param string $errorDescription
-     * @param string $errorUri
-     * @param int $statusCode
+     * @param  string            $errorCode
+     * @param  string            $errorDescription
+     * @param  string            $errorUri
+     * @param  int               $statusCode
      * @return AbstractTokenType
      */
     public function setError($error, $errorDescription = null, $errorUri = null, $statusCode = 400)
     {
         $this->result = Service::error('error', $error, $errorDescription, $errorUri, $statusCode);
+
         return $this;
     }
 

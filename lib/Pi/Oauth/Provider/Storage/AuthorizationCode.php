@@ -2,12 +2,11 @@
 namespace Pi\Oauth\Provider\Storage;
 use Pi\Oauth\Provider\Service;
 
-
 class AuthorizationCode extends AbstractStorage implements CodeInterface
 {
     /**
     * add code ,if existed update the record by new code
-    * 
+    *
     */
     public function add($params)
     {
@@ -29,12 +28,13 @@ class AuthorizationCode extends AbstractStorage implements CodeInterface
         } else {
             parent::add($params);
         }
+
         return $params['code'];
     }
 
     /**
     * get code data by code
-    * @param authorization code 
+    * @param authorization code
     * @return array
     */
     public function getbyCode($code)

@@ -15,6 +15,7 @@ class ResourceOwner extends AbstractModel implements ValidateInterface
                 $result = true;
             }
         }
+
         return $result;
     }
 }

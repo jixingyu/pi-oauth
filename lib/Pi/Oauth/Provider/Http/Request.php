@@ -17,12 +17,14 @@ class Request extends HttpRequest
         if (null === $result) {
             $result = $this->getQuery($name);
         }
+
         return $result;
     }
 
     public function setParameters($params = array())
     {
         $this->parameters = array_merge($this->parameters,$params);
+
         return $this;
     }
 }

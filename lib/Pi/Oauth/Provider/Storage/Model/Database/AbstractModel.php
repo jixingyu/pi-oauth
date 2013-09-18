@@ -17,6 +17,7 @@ abstract class AbstractModel implements ModelInterface
     {
         $row = $this->model->createRow($params);
         $result = $row->save();
+
         return $result;
     }
 
@@ -26,7 +27,8 @@ abstract class AbstractModel implements ModelInterface
         $row = $this->model->find($value,$name);
         if ($row) {
             $params = $row->toArray();
-        }             
+        }
+
         return $params;
     }
 
@@ -34,18 +36,21 @@ abstract class AbstractModel implements ModelInterface
     {
         $row = $this->model->find($id);
         $result = $row->assign($params)->save();
+
         return $result;
     }
 
     public function delete($id)
     {
         $result = $this->model->delete(array('id' => $id));
+
         return $result;
     }
 
     public function expire($expires)
     {
         $result = $this->model->delete(array('expires < ?' => $expires));
+
         return $result;
     }
 }

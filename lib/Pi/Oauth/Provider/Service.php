@@ -2,12 +2,7 @@
 namespace Pi\Oauth\Provider;
 
 use Pi;
-use Pi\Oauth\Provider\Server\AbstratServer;
-use Pi\Oauth\Provider\Storage\AbstractStorage;
 use Pi\Oauth\Provider\Storage\ModelInterface;
-use Pi\Oauth\Provider\GrantType\AbstractGrantType;
-use Pi\Oauth\Provider\ResponseType\AbstractResponseType;
-use Pi\Oauth\Provider\TokenType\AbstratTokenType;
 use Pi\Oauth\Provider\Result;
 use Pi\Oauth\Provider\Http\Request;
 use Pi\Oauth\Provider\Http\Response;
@@ -102,8 +97,7 @@ class Service
             $config = (array) include $config;
         }
         if (!isset($config['storage']['model_set'])) {
-            $config['storage']['model_set'] = function ($identifier)
-            {
+            $config['storage']['model_set'] = function ($identifier) {
                 return Pi::model($identifier, 'oauth');
             };
         }
@@ -115,6 +109,7 @@ class Service
         if (isset(static::$config[$section]) && isset(static::$config[$section][$identifier])) {
             return static::$config[$section][$identifier];
         }
+
         return null;
     }
 
@@ -249,6 +244,7 @@ class Service
     {
         $class = __NAMESPACE__ . '\\Utility\\Scope';
         $scope = new $class($scopeData);
+
         return $scope;
     }
 
@@ -258,6 +254,7 @@ class Service
         if (null === $resourceOwner) {
             return isset(static::$registry[$key]) ? static::$registry[$key] : null;
         }
+
         return static::$registry[$key] = $resourceOwner;
     }
 
@@ -314,7 +311,7 @@ class Service
                         'config'    => array(
                             'table_prefix'  => 'oauth',
                         ),
-                    ), 
+                    ),
                 ),
                 'authorization_code'    => array(
                     'expires_in'    => $data['code_expires'],
@@ -334,9 +331,6 @@ class Service
     }
 }
 
-
-
-    
 /**
  * Demo for configs
  */
@@ -376,7 +370,7 @@ $config = array(
                         'config'    => array(
                             'table_prefix'  => 'oauth',
                         ),
-                    ),            
+                    ),
                 ),
                 'authorization_code'    => array(
                     'expires_in'    => 300,

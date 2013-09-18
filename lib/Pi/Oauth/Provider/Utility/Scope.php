@@ -61,6 +61,7 @@ class Scope
     {
         $s = $scope->getScope(true);
         $arrayDiff = array_diff($s, $this->scope);
+
         return $arrayDiff ? false : true;
     }
 
@@ -71,12 +72,14 @@ class Scope
     {
         $s = $scope->getScope(true);
         $arrayDiff = array_diff($this->scope, $s);
+
         return $arrayDiff ? false : true;
     }
 
     public function mergeWith(Scope $scope)
     {
         $this->scope = $this->canonize(array_merge($this->scope, $scope->getScope(true)));
+
         return $this;
     }
 }

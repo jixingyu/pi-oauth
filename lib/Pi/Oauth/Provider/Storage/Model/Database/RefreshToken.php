@@ -1,9 +1,7 @@
 <?php
 namespace Pi\Oauth\Provider\Storage\Model\Database;
 
-use Pi\Oauth\Provider\Storage\CodeInterface;
 use Pi\Oauth\Provider\Storage\Model\Database\AbstractModel;
-
 
 class RefreshToken extends AbstractModel
 {
@@ -13,6 +11,7 @@ class RefreshToken extends AbstractModel
             'client_id'     => $params['client_id'],
             'resource_owner'=> $params['resource_owner'],
         ))->toArray();
+
         return $token[0];
     }
 

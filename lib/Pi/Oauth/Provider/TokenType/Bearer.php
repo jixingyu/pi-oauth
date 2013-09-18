@@ -36,10 +36,12 @@ class Bearer extends AbstractTokenType
         $methodsUsed = !empty($headers) + (null !== $request->getQuery('access_token')) + (null !== $request->getPost('access_token'));
         if ($methodsUsed > 1) {
             $this->setError('invalid_request', 'Only one method may be used to authenticate at a time (Auth header, GET or POST)');
+
             return $tokenParam;
         }
         if ($methodsUsed == 0) {
             $this->setError('invalid_request', 'The access token was not found');
+
             return null;
         }
 
@@ -47,6 +49,7 @@ class Bearer extends AbstractTokenType
         if (!empty($headers)) {
             if (!preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
                 $this->setError('invalid_request', 'Malformed authorization header');
+
                 return null;
             }
             $tokenParam = $matches[1];
@@ -55,12 +58,14 @@ class Bearer extends AbstractTokenType
             // POST: Get the token from POST data
             if (!$request->isPost()) {
                 $this->setError('invalid_request', 'When putting the token in the body, the method must be POST');
+
                 return null;
             }
 
             if ($request->getServer('CONTENT_TYPE') !== null && $request->getServer('CONTENT_TYPE') != 'application/x-www-form-urlencoded') {
                 // IETF specifies content-type. NB: Not all webservers populate this _SERVER variable
                 $this->setError('invalid_request', 'The content type for POST requests must be "application/x-www-form-urlencoded"');
+
                 return null;
             }
 
@@ -79,6 +84,7 @@ class Bearer extends AbstractTokenType
         if (!$result) {
             $tokenParam = null;
             $this->setError('invalid_token', 'The access token is malformed');
+
             return null;
         }
 
@@ -88,6 +94,7 @@ class Bearer extends AbstractTokenType
     public function setError($error, $errorDescription = null, $errorUri = null, $statusCode = 400)
     {
         $this->result = Service::error('resource_bearer_error', $error, $errorDescription, $errorUri, $statusCode);
+
         return $this;
     }
 }

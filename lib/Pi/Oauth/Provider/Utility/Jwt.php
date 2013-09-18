@@ -85,7 +85,7 @@ class Jwt
 
     protected static function sign($input, $key, $algo = 'HS256')
     {
-        switch($algo) {
+        switch ($algo) {
             case 'HS256':
                 return hash_hmac('sha256', $input, $key, true);
 
@@ -122,12 +122,14 @@ class Jwt
     {
         $b64 = base64_encode($data);
         $b64 = str_replace(array('+', '/', '\r', '\n', '='), array('-', '_'), $b64);
+
         return $b64;
     }
 
     protected static function urlSafeB64Decode($b64)
     {
         $b64 = str_replace(array('-', '_'), array('+', '/'), $b64);
+
         return base64_decode($b64);
     }
 }

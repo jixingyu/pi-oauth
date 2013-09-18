@@ -20,6 +20,7 @@ abstract class AbstractGrantType
     public function setConfig(array $config)
     {
         $this->config = array_merge($this->config, $config);
+
         return $this;
     }
 
@@ -31,6 +32,7 @@ abstract class AbstractGrantType
     public function setRequest(Request $request)
     {
         $this->request = $request;
+
         return $this;
     }
 
@@ -46,6 +48,7 @@ abstract class AbstractGrantType
     public function setError($error, $errorDescription = null, $errorUri = null, $statusCode = 400)
     {
         $this->result = Service::error('grant_error', $error, $errorDescription, $errorUri, $statusCode);
+
         return $this;
     }
 
@@ -69,6 +72,7 @@ abstract class AbstractGrantType
             return false;
         }
         $tokenData = $this->createToken();
+
         return $tokenData;
     }
 
@@ -88,6 +92,7 @@ abstract class AbstractGrantType
                     'resource_owner'    => $request->getRequest('resource_owner')));
             $tokenData['refresh_token'] = $refreshToken;
         }
+
         return $tokenData;
     }
 

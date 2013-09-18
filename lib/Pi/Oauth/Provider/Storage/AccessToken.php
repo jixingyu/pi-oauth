@@ -18,6 +18,7 @@ class AccessToken extends AbstractStorage implements CodeInterface
         } else {
             parent::update($tokenData['id'], $params);
         }
+
         return array(
             'token_type'    => $this->config['token_type'],
             'expires_in'    => $this->config['expires_in'],
@@ -33,6 +34,7 @@ class AccessToken extends AbstractStorage implements CodeInterface
 
         $tokenData = $this->model->getToken($params);
         parent::update($tokenData['id'],$params);
+
         return array(
             'token_type'    => $this->config['token_type'],
             'expires_in'    => $this->config['expires_in'],
@@ -51,6 +53,7 @@ class AccessToken extends AbstractStorage implements CodeInterface
             'resource_owner' => $uid,
             'client_id'      => $clientid
         ));
+
         return $result;
     }
 }

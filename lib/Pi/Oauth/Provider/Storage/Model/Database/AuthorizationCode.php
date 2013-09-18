@@ -21,6 +21,7 @@ class AuthorizationCode extends AbstractModel implements ValidateInterface
             'client_id'     => $params['client_id'],
             'resource_owner'=> $params['resource_owner'],
         ))->toArray();
+
         return $code[0];
     }
 
@@ -30,7 +31,7 @@ class AuthorizationCode extends AbstractModel implements ValidateInterface
     public function delete($code)
     {
         $result = $this->model->delete(array('code' => $code));
+
         return $result;
     }
 }
-

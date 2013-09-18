@@ -7,7 +7,7 @@ class Code extends AbstractResponseType
 {
     protected function validateRequest()
     {
-        
+
     }
     public function process(array $params)
     {

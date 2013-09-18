@@ -16,6 +16,7 @@ class Response extends HttpResponse
         } elseif (array_key_exist($key, $this->params)) {
             unset($this->params[$key]);
         }
+
         return $this;
     }
 
@@ -27,12 +28,14 @@ class Response extends HttpResponse
     public function setParams(array $params)
     {
         $this->params = $params;
+
         return $this;
     }
 
     public function setFormat($format = 'json')
     {
         $this->format = $format;
+
         return $this;
     }
 
@@ -47,6 +50,7 @@ class Response extends HttpResponse
                 $this->getHeaders()->addHeaderLine('Content-Type', 'application/json');
                 break;
         }
+
         return $this;
     }
 
@@ -69,6 +73,7 @@ class Response extends HttpResponse
         }
 
         parent::setContent($content);
+
         return $this;
     }
 

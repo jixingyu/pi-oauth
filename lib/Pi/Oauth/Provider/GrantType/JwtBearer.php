@@ -66,6 +66,7 @@ class JwtBearer extends AbstractGrantType implements AssertionInterface
         $data = (array) $assertion;
         $data['client_id'] = $data['iss'];
         $data['resource_owner'] = $data['sub'];
+
         return $data;
     }
 
@@ -75,6 +76,7 @@ class JwtBearer extends AbstractGrantType implements AssertionInterface
         $assertion = $request->request("assertion");
         if (!$assertion) {
             $this->setError('invalid_request');
+
             return false;
         }
         $this->assertionParam = $assertion;
@@ -83,10 +85,12 @@ class JwtBearer extends AbstractGrantType implements AssertionInterface
         $jwt = JwtEncryption::decode($assertion);
         if (!$jwt) {
             $this->setError('invalid_request');
+
             return false;
         }
         if (!$this->validateAssertion($jwt)) {
             $this->setError('invalid_grant');
+
             return false;
         }
 
@@ -109,6 +113,7 @@ class JwtBearer extends AbstractGrantType implements AssertionInterface
             'resource_owner'    => $this->assertionData('resource_owner'),
         );
         $tokenData = Service::storage('access_token')->add($params);
+
         return $tokenData;
     }
 }

@@ -40,6 +40,7 @@ class Error extends Response
         }
         $this->error = $error;
         $this->setParam('error', $error);
+
         return $this;
     }
 
@@ -51,18 +52,20 @@ class Error extends Response
         if (null !== $errorDescription) {
             $this->setParam('error_description', $errorDescription);
         }
+
         return $this;
     }
 
     public function setErrorUri($errorUri)
     {
-        if ( null !== $errorUri) {
+        if (null !== $errorUri) {
             if ($errorUri && $errorUri[0] == '#') {
                 // we are referencing an oauth bookmark (for brevity)
                 $errorUri = 'http://tools.ietf.org/html/rfc6749' . $errorUri;
             }
             $this->setParam('error_uri', $errorUri);
         }
+
         return $this;
     }
 }

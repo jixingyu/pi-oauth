@@ -33,6 +33,7 @@ class Authorization extends AbstractServer
         }
 
         parent::setConfig($config);
+
         return $this;
     }
 
@@ -42,6 +43,7 @@ class Authorization extends AbstractServer
         foreach ($types as $type) {
             $this->responseTypes[$type] = '';
         }
+
         return $this;
     }
 
@@ -66,18 +68,20 @@ class Authorization extends AbstractServer
     {
         $request = $this->getRequest();
 
-        /** Make sure a valid client id was supplied (we can not redirect because we were unable to verify the URI)  
+        /** Make sure a valid client id was supplied (we can not redirect because we were unable to verify the URI)
         * get client id and secret form HTTP Basic Authorization
         */
-        if (!$request->getRequest('client_id')) {          
+        if (!$request->getRequest('client_id')) {
             $this->setError('invalid_request','there is parameters missing : client_id');
-            return false;            
+
+            return false;
         }
         $clientId = $request->getRequest('client_id');
 
         if (!$clientId) {
             // We don't have a good URI to use
             $this->setError('invalid_request','require client id');
+
             return false;
         }
 
@@ -85,10 +89,12 @@ class Authorization extends AbstractServer
         $responseType = $request->getRequest('response_type');
         if (!$responseType) {
             $this->setError('invalid_request','resopnse type is required');
+
             return false;
         }
         if (!isset($this->responseTypes[$responseType])) {
             $this->setError('unsupported_response_type');
+
             return false;
         }
 
@@ -100,6 +106,7 @@ class Authorization extends AbstractServer
             $parts = parse_url($redirectUri);
             if (!empty($parts['fragment'])) {
                 $this->setError('invalid_request','redirect url error ');
+
                 return false;
             }
         }
@@ -108,12 +115,14 @@ class Authorization extends AbstractServer
         $clientData = Service::storage('client')->getClient($clientId);
         if (!$clientData) {
             $this->setError('unauthorized_client');
+
             return false;
         }
 
         // Check only public clients are allowed for token response_type
         if ('public' != $clientData['type'] && 'token' == $responseType) {
             $this->setError('unsupported_response_type');
+
             return false;
         }
 
@@ -122,6 +131,7 @@ class Authorization extends AbstractServer
         $redirectUri = $this->validateRedirectUri($redirectUri, $clientData['redirect_uri']);
         if (!$redirectUri) {
             $this->setError('invalid_request', 'redirect url is not validate');
+
             return false;
         }
 
@@ -131,8 +141,10 @@ class Authorization extends AbstractServer
         $scopeGranted = Service::scope($clientData['scope']);
         if (!$scopeRequested->isSubsetOf($scopeGranted)) {
             $this->setError('invalid_scope');
+
             return false;
         }
+
         return true;
     }
 
@@ -159,12 +171,14 @@ class Authorization extends AbstractServer
         $result = $this->responseType($responseType)->process($params);
         $uri = $this->buildUri($redirectUri, $result);
         $this->result = Service::result('redirect', $uri);
+
         return true;
     }
 
     public function setError($error, $errorDescription = null, $errorUri = null, $statusCode = 400)
     {
         $this->result = Service::error('authorization_error', $error, $errorDescription, $errorUri, $statusCode);
+
         return $this;
     }
 
@@ -186,7 +200,7 @@ class Authorization extends AbstractServer
         $parseUrl = parse_url($uri);
 
         // Add our params to the parsed uri
-        foreach ( $params as $k => $v ) {
+        foreach ($params as $k => $v) {
             if (isset($parseUrl[$k])) {
                 $parseUrl[$k] .= "&" . http_build_query($v);
             } else {
@@ -229,6 +243,7 @@ class Authorization extends AbstractServer
                 return $redirectUriRequested;
             }
         }
+
         return false;
     }
 }

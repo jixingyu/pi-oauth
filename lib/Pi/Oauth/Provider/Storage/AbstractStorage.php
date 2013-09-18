@@ -1,8 +1,6 @@
 <?php
 namespace Pi\Oauth\Provider\Storage;
 
-use Pi\Oauth\Provider\Service;
-
 abstract class AbstractStorage implements ModelInterface
 {
     protected $config = array();
@@ -16,6 +14,7 @@ abstract class AbstractStorage implements ModelInterface
     public function setModel(ModelInterface $model)
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -27,6 +26,7 @@ abstract class AbstractStorage implements ModelInterface
         }
 
         $this->config = array_merge($this->config, $config);
+
         return $this;
     }
 
@@ -36,10 +36,11 @@ abstract class AbstractStorage implements ModelInterface
             if (!isset($params['expires'])) {
                 $params['expires'] = time() + $this->config['expires_in'];
             }
-            
+
         }
 
         $result = $this->model->add($params);
+
         return $result;
     }
 
@@ -62,12 +63,14 @@ abstract class AbstractStorage implements ModelInterface
         }
 
         $result = $this->model->update($id, $params);
+
         return $result;
     }
 
     public function delete($id)
     {
         $result = $this->model->delete($id);
+
         return $result;
     }
 
@@ -77,6 +80,7 @@ abstract class AbstractStorage implements ModelInterface
             return true;
         }
         $expires = $expires ?: time();
+
         return $this->model->expire($expires);
     }
 
@@ -94,6 +98,7 @@ abstract class AbstractStorage implements ModelInterface
         } else {
             $randomData = mt_rand() . mt_rand() . mt_rand() . mt_rand() . microtime(true) . uniqid(mt_rand(), true);
         }
+
         return substr(hash('sha512', $randomData), 0, $len);
     }
 }

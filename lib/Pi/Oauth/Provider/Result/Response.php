@@ -18,6 +18,7 @@ class Response extends HttpResponse
             return $this->errorType;
         }
         $this->errorType = $errorType;
+
         return $this;
     }
 }

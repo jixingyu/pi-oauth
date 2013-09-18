@@ -9,12 +9,13 @@ class Client extends AbstractStorage implements ValidateInterface
     }
 
     /**
-    * insert new client into database 
+    * insert new client into database
     */
     public function addClient($param)
     {
         $client = $this->generateClient();
         $record = array_merge($param,$client);
+
         return $this->model->addClient($record);
     }
 

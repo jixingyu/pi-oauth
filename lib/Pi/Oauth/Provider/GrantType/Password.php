@@ -13,10 +13,12 @@ class Password extends AbstractGrantType
         $request = $this->getRequest();
         if (!$request->getRequest('client_id')) {
             $this->setError('invalid_request');
+
             return false;
         }
         if (!$request->getRequest('password') || !$request->getRequest('username')) {
             $this->setError('invalid_request');
+
             return false;
         }
 
@@ -30,11 +32,13 @@ class Password extends AbstractGrantType
         $password = $request->getRequest('password');
         if (!Service::storage('resource_owner')->validate($username, $password)) {
             $this->setError('invalid_grant');
+
             return false;
         } else {
             $request->setParameters(array(
                 'resource_owner' => Pi::user()->getUser($username, 'identity')->id
             ));
+
             return true;
         }
     }

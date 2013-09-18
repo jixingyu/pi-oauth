@@ -1,14 +1,13 @@
 <?php
 namespace Pi\Oauth\Provider\GrantType;
 
-use Pi\Oauth\Provider\Service;
 use Pi\Oauth\Provider\Utility\Jwt as JwtEncryption;
 
 /**
 * The JWT bearer authorization grant implements JWT (JSON Web Tokens) as a grant type.
 * @see http://tools.ietf.org/html/rfc6750
 */
-class JwtBearer extends AbstractGrantType
+class -JwtBearer extends AbstractGrantType
 {
     protected $identifier = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
 
@@ -72,6 +71,7 @@ class JwtBearer extends AbstractGrantType
         if (!$jwt) {
 
             $this->response = new Response\Error(400, 'invalid_request', "JWT is malformed");
+
             return null;
         }
 
@@ -98,7 +98,6 @@ class JwtBearer extends AbstractGrantType
 
         return $tokenData;
     }
-
 
     /**
      * Helper function to make it easier to return a JWT parameter.
@@ -244,6 +243,7 @@ class JwtBearer extends AbstractGrantType
         if (!$jwt) {
 
             $this->response = new Response\Error(400, 'invalid_grant', "JWT failed signature verification");
+
             return null;
         }
 

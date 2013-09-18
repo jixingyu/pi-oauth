@@ -13,6 +13,7 @@ class AuthorizationCode extends AbstractGrantType
 
         if (!$request->getRequest('code')) {
             $this->setError('invalid_request');
+
             return false;
         }
 
@@ -26,17 +27,20 @@ class AuthorizationCode extends AbstractGrantType
         $codeData = Service::storage('authorization_code')->getbyCode($code);
         if (!$codeData) {
             $this->setError('invalid_grant', 'invalid Authorization code');
+
             return false;
         }
 
         if ($codeData['client_id'] != $request->getRequest('client_id')) {
             $this->setError('invalid_grant', 'this code is not grant');
+
             return false;
         }
 
         if ($codeData['expires'] < time()) {
             Service::storage('authorization_code')->expire();
             $this->setError('invalid_grant', 'this code is expired');
+
             return false;
         }
 
@@ -47,6 +51,7 @@ class AuthorizationCode extends AbstractGrantType
         if (!empty($codeData['redirect_uri'])) {
             if (!$request->getRequest('redirect_uri') || urldecode($request->getRequest('redirect_uri')) != $codeData['redirect_uri']) {
                 $this->setError('invalid_grant', 'redirect uri is not match');
+
                 return false;
             }
         }

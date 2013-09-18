@@ -22,6 +22,7 @@ class Loader implements LoaderInterface
         } else {
             $model = Pi::model($identifier, static::$config['table_prefix']);
         }
+
         return new $class($model);
     }
 }

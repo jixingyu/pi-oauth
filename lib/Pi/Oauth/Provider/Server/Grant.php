@@ -29,12 +29,14 @@ class Grant extends AbstractServer
         }
 
         parent::setConfig($config);
+
         return $this;
     }
 
     public function setGrantTypes(array $types)
     {
         $this->grantTypes = $types;
+
         return $this;
     }
 
@@ -59,8 +61,8 @@ class Grant extends AbstractServer
     /**
      * add a grant_type
      *
-     * @param AbstractGrantType|string $grantType The grant type to add for the specified identifier
-     * @param string|null $identifier A string passed in as "grant_type" in the response that will call this grantType
+     * @param AbstractGrantType|string $grantType  The grant type to add for the specified identifier
+     * @param string|null              $identifier A string passed in as "grant_type" in the response that will call this grantType
      **/
     public function addGrantType($grantType, $identifier = null)
     {
@@ -77,22 +79,24 @@ class Grant extends AbstractServer
     /**
     * check schema and parameters of this request
     * the request must use POST method, and support two method to get client credential : HTTP Basic and post filed
-    * the grant type must support by this server 
+    * the grant type must support by this server
     */
     protected function validateRequest()
     {
         $request = $this->getRequest();
-        
+
         /**
          * @see http://tools.ietf.org/html/rfc6749#section-3.2
          */
         if (!$request->isPost()) {
             $this->setError('invalid_request', 'The client MUST use the HTTP "POST" method when making access token requests.');
+
             return false;
         }
 
         if (!$request->getRequest('client_id')) {
             $this->setError('invalid_request','there is parameters missing : client_id');
+
             return false;
         }
 
@@ -100,11 +104,13 @@ class Grant extends AbstractServer
         $grantType = $request->getRequest('grant_type');
         if (!$grantType) {
             $this->setError('invalid_request', 'The grant type was not specified in the request');
+
             return false;
         }
 
         if (!$this->hasGrantType($grantType)) {
             $this->setError('invalid_request', 'The grant type was invalided');
+
             return false;
         }
 
@@ -123,8 +129,10 @@ class Grant extends AbstractServer
             $this->setResult($token);
         } else {
             $this->result = $grantType->getResult();
+
             return false;
         }
+
         return true;
     }
 }

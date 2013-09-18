@@ -12,6 +12,7 @@ class Client extends AbstractModel implements ValidateInterface
             'client_id'     => $id,
             'client_secret' => $secret,
         ));
+
         return $rowset->count() == 1 ? true : false;
     }
 
@@ -23,6 +24,7 @@ class Client extends AbstractModel implements ValidateInterface
                 return $client;
             }
         }
+
         return false;
     }
 
@@ -37,6 +39,7 @@ class Client extends AbstractModel implements ValidateInterface
         if (!empty($rowset)) {
             return $rowset->toArray();
         }
+
         return false;
     }
 }
